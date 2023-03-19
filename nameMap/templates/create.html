@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="subscribe-box"> 
+    <h2>Digite um nome</h2>
+    <form method="post" class="subscribe">
+      <input type="text" name="nome" placeholder="" autocomplete="off" required="required" 
+      value="{{ request.form['nome'] }}"></input>
+      
+      <br>
+      
+      <button type="submit"> <span>Enviar</span></button>
+    </form>
+  </div>
+{% endblock %}

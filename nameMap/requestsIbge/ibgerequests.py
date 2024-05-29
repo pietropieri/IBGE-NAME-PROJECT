@@ -28,7 +28,7 @@ class Ibge():
         self.max_frequency = 0
 
         # Brasil geojson
-        self.brasil_geojson = json.load(open("/home/pietro/Projetos/nameMap/requestsIbge/brasilgeojson.json", "r"))
+        self.brasil_geojson = json.load(open("/home/pietro/IBGE-PROJECT/nameMap/requestsIbge/brasilgeojson.json", "r"))
 
         # map name image
         self.fig_name = ''
@@ -166,7 +166,7 @@ class Ibge():
         self.fig_name.update_layout(height=800)
 
         # create html map
-        self.fig_name.write_html("/home/pietro/Projetos/nameMap/templates/map.html")
+        self.fig_name.write_html("/home/pietro/IBGE-PROJECT/nameMap/templates/map.html")
         
         return
 
@@ -213,7 +213,7 @@ class Ibge():
         self.fig_name.update_layout(height=800)
 
         # create html map
-        self.fig_name.write_html("/home/pietro/Projetos/nameMap/templates/map.html")
+        self.fig_name.write_html("/home/pietro/IBGE-PROJECT/nameMap/templates/map.html")
 
         self.figJson()
         

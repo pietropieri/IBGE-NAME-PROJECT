@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from requestsIbge.fomatter_brasilgeoson import strip_accents
 from copy import deepcopy
+from requestsIbge.cachedict import CacheDict
 
 class Ibge():
     def __init__(self) -> None:
@@ -32,6 +33,9 @@ class Ibge():
 
         # map name image
         self.fig_name = ''
+
+        # dict names
+        self.cache = CacheDict(10)
 
         # list Ibge years
         self.ibge_years = [
@@ -164,9 +168,6 @@ class Ibge():
         
         # update image layout
         self.fig_name.update_layout(height=800)
-
-        # create html map
-        self.fig_name.write_html("/home/pietro/IBGE-PROJECT/nameMap/templates/map.html")
         
         return
 
@@ -205,24 +206,19 @@ class Ibge():
 
         return
 
-    def createFigAno(self):
+    def createFigAno(self, nome):
         # create map image
         self.fig_name = px.choropleth(data_frame = self.data_frame_ano, locations='estado', geojson = self.brasil_geojson, hover_data = ['estado'], color = 'pessoa', scope = 'south america', range_color = (0,self.max_frequency), animation_frame = 'periodo')
         
         # update image layout
         self.fig_name.update_layout(height=800)
 
-        # create html map
-        self.fig_name.write_html("/home/pietro/IBGE-PROJECT/nameMap/templates/map.html")
-
-        self.figJson()
+        self.figJson(nome)
         
         return
 
-    def figJson(self):
+    def figJson(self, key):
         self.fig_json = json.dumps(self.fig_name, cls=plt.utils.PlotlyJSONEncoder)
+        self.cache.put(key, self.fig_json)
         return
 
-    def setJsonFig(self, jsonmap):
-        self.fig_json = jsonmap
-        return

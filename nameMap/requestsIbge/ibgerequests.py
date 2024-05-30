@@ -10,6 +10,7 @@ import pandas as pd
 from requestsIbge.fomatter_brasilgeoson import strip_accents
 from copy import deepcopy
 from requestsIbge.cachedict import CacheDict
+import sys
 
 class Ibge():
     def __init__(self) -> None:
@@ -112,18 +113,22 @@ class Ibge():
         # get name frenquency in Brasil by localtion
         request_nome_local = requests.get(f"https://servicodados.ibge.gov.br/api/v2/censos/nomes/{self.name}?localidade={estado_id}")
 
-        # get request json
-        nome_local = request_nome_local.json()[0]
-
         # total variable initialization
-        total = 0        
-        
-        # calculation of the total value of the name in that locality
-        for resposta in nome_local['res']:
-            total = total + resposta['frequencia']
+        total = 0  
 
-        # save name total frequenci in data frame
-        self.data_frame.loc[self.data_frame.ibgeIds == estado_id, 'pessoa'] = total
+        # get request json
+        try:
+            nome_local = request_nome_local.json()[0]
+
+            # calculation of the total value of the name in that locality
+            for resposta in nome_local['res']:
+                total = total + resposta['frequencia']
+
+            self.data_frame.loc[self.data_frame.ibgeIds == estado_id, 'pessoa'] = total
+
+        except:
+            # save name total frequenci in data frame
+            self.data_frame.loc[self.data_frame.ibgeIds == estado_id, 'pessoa'] = total
 
         return None
 
@@ -142,9 +147,13 @@ class Ibge():
         for i in self.data_frame['ibgeIds']:
             # get the name frequency by state
             request_nome_local = requests.get(f"https://servicodados.ibge.gov.br/api/v2/censos/nomes/{self.name}?localidade={i}")
-            
+
             # get request json
-            nome_local = request_nome_local.json()[0]
+            try:
+                nome_local = request_nome_local.json()[0]
+
+            except:
+                continue
 
             # total variable initialization
             total = 0        
@@ -192,7 +201,11 @@ class Ibge():
             request_nome_local = requests.get(f"https://servicodados.ibge.gov.br/api/v2/censos/nomes/{self.name}?localidade={i}")
 
             # get request json
-            nome_local = request_nome_local.json()[0]
+            try:
+                nome_local = request_nome_local.json()[0]
+
+            except:
+                continue
         
             # calculation of the total value of the name in that locality
             for resposta in nome_local['res']:
